@@ -12,37 +12,33 @@ st.write("أدخل الرقم الجامعي للطالب للاستعلام ع�
 # إدخال الرقم الجامعي
 student_id = st.text_input("الرقم الجامعي")
 
-# زر البحث
-if st.button("🔍 بحث عن النتيجة"):
+# البحث تلقائيًا عند إدخال الرقم
+if student_id.strip() != "":
 
-    if student_id.strip() == "":
-        st.warning("يرجى إدخال الرقم الجامعي.")
-
-    else:
+    try:
         # تحويل الرقم المدخل إلى رقم صحيح
-        try:
-            student_id_value = int(student_id.strip())
+        student_id_value = int(student_id.strip())
 
-            result = df[df["Student_ID"] == student_id_value]
+        # البحث عن الطالب
+        result = df[df["Student_ID"] == student_id_value]
 
-            if not result.empty:
-                st.success("✅ تم العثور على الطالب بنجاح!")
+        if not result.empty:
+            st.success("✅ تم العثور على الطالب بنجاح!")
 
-                # بيانات الطالب
-                student = result.iloc[0]
+            # بيانات الطالب
+            student = result.iloc[0]
 
-                st.subheader("👨‍🎓 بيانات الطالب")
+            st.subheader("👨‍🎓 بيانات الطالب")
 
-                st.write(f"**الرقم الجامعي:** {student['Student_ID']}")
-                st.write(f"**اسم الطالب:** {student['Student_Name']}")
+            st.write(f"**الرقم الجامعي:** {student['Student_ID']}")
+            st.write(f"**اسم الطالب:** {student['Student_Name']}")
 
-                # عرض النتيجة
-                st.subheader("📊 نتيجة الطالب")
+            # عرض النتيجة
+            st.subheader("📊 نتيجة الطالب")
+            st.dataframe(result, use_container_width=True)
 
-                st.dataframe(result, use_container_width=True)
+        else:
+            st.error("❌ الرقم الجامعي غير موجود.")
 
-            else:
-                st.error("❌ الرقم الجامعي غير موجود.")
-
-        except ValueError:
-            st.error("⚠️ يرجى إدخال رقم جامعي صحيح.")
+    except ValueError:
+        st.error("⚠️ يرجى إدخال رقم جامعي صحيح.")
