@@ -16,6 +16,10 @@ st.write("أدخل الرقم الجامعي ثم اضغط على زر الاس�
 # خانة الرقم الجامعي
 student_id = st.text_input("الرقم الجامعي")
 
+# إذا تم مسح الرقم، يتم حذف نتيجة البحث
+if student_id.strip() == "":
+    st.session_state.searched_id = None
+
 # زر الاستعلام
 if st.button("🔍 استعلام"):
 
@@ -25,13 +29,14 @@ if st.button("🔍 استعلام"):
 
     else:
         try:
+            # تحويل الرقم إلى رقم صحيح
             student_id_value = int(student_id.strip())
 
             # البحث عن الطالب
             result = df[df["Student_ID"] == student_id_value]
 
             if not result.empty:
-                # حفظ الرقم الذي تم البحث عنه
+                # حفظ الرقم الذي تم الاستعلام عنه
                 st.session_state.searched_id = student_id_value
 
             else:
@@ -43,7 +48,7 @@ if st.button("🔍 استعلام"):
             st.session_state.searched_id = None
 
 
-# عرض النتيجة فقط إذا كان الرقم ما زال موجودًا
+# عرض النتيجة فقط إذا كان الرقم موجودًا
 # وهو نفس الرقم الذي تم الاستعلام عنه
 if (
     student_id.strip() != ""
