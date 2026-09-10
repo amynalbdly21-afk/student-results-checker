@@ -7,38 +7,44 @@ df = pd.read_excel("Student_Results.xlsx")
 # عنوان الموقع
 st.title("🎓 نظام الاستعلام عن نتائج الطلاب")
 
-st.write("أدخل الرقم الجامعي للطالب للاستعلام عن النتيجة.")
+st.write("أدخل الرقم الجامعي للطالب ثم اضغط على زر الاستعلام.")
 
 # إدخال الرقم الجامعي
 student_id = st.text_input("الرقم الجامعي")
 
-# البحث تلقائيًا عند إدخال الرقم
-if student_id.strip() != "":
+# زر الاستعلام
+search_clicked = st.button("🔍 استعلام")
 
-    try:
-        # تحويل الرقم المدخل إلى رقم صحيح
-        student_id_value = int(student_id.strip())
+# إذا تم الضغط على زر الاستعلام
+if search_clicked:
 
-        # البحث عن الطالب
-        result = df[df["Student_ID"] == student_id_value]
+    if student_id.strip() == "":
+        st.warning("⚠️ يرجى إدخال الرقم الجامعي.")
 
-        if not result.empty:
-            st.success("✅ تم العثور على الطالب بنجاح!")
+    else:
+        try:
+            # تحويل الرقم إلى رقم صحيح
+            student_id_value = int(student_id.strip())
 
-            # بيانات الطالب
-            student = result.iloc[0]
+            # البحث عن الطالب
+            result = df[df["Student_ID"] == student_id_value]
 
-            st.subheader("👨‍🎓 بيانات الطالب")
+            if not result.empty:
+                st.success("✅ تم العثور على الطالب بنجاح!")
 
-            st.write(f"**الرقم الجامعي:** {student['Student_ID']}")
-            st.write(f"**اسم الطالب:** {student['Student_Name']}")
+                student = result.iloc[0]
 
-            # عرض النتيجة
-            st.subheader("📊 نتيجة الطالب")
-            st.dataframe(result, use_container_width=True)
+                st.subheader("👨‍🎓 بيانات الطالب")
 
-        else:
-            st.error("❌ الرقم الجامعي غير موجود.")
+                st.write(f"**الرقم الجامعي:** {student['Student_ID']}")
+                st.write(f"**اسم الطالب:** {student['Student_Name']}")
 
-    except ValueError:
-        st.error("⚠️ يرجى إدخال رقم جامعي صحيح.")
+                st.subheader("📊 نتيجة الطالب")
+
+                st.dataframe(result, use_container_width=True)
+
+            else:
+                st.error("❌ الرقم الجامعي غير موجود.")
+
+        except ValueError:
+            st.error("⚠️ يرجى إدخال رقم جامعي صحيح.")
