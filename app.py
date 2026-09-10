@@ -3,7 +3,7 @@ import pandas as pd
 
 # إعداد الصفحة
 st.set_page_config(
-    page_title="Student Results Checker",
+    page_title="نظام نتائج الطلاب",
     page_icon="🎓",
     layout="centered"
 )
@@ -20,15 +20,8 @@ st.title("🎓 نظام الاستعلام عن نتائج الطلاب")
 
 st.write("أدخل الرقم الجامعي ثم اضغط على زر الاستعلام.")
 
-# خانة الرقم الجامعي
-student_id = st.text_input(
-    "🆔 الرقم الجامعي",
-    placeholder="مثال: 1003"
-)
-
-# إذا تم مسح الرقم
-if student_id.strip() == "":
-    st.session_state.searched_id = None
+# إدخال الرقم الجامعي
+student_id = st.text_input("🆔 الرقم الجامعي")
 
 # زر الاستعلام
 if st.button("🔍 استعلام", use_container_width=True):
@@ -39,7 +32,6 @@ if st.button("🔍 استعلام", use_container_width=True):
 
     else:
         try:
-            # تحويل الرقم إلى رقم صحيح
             student_id_value = int(student_id.strip())
 
             # البحث عن الطالب
@@ -58,8 +50,7 @@ if st.button("🔍 استعلام", use_container_width=True):
 
 # عرض النتيجة
 if (
-    student_id.strip() != ""
-    and st.session_state.searched_id is not None
+    st.session_state.searched_id is not None
     and student_id.strip().isdigit()
     and int(student_id.strip()) == st.session_state.searched_id
 ):
@@ -78,16 +69,7 @@ if (
     # النتيجة
     st.subheader("📊 النتيجة")
 
-    result_value = str(student["Result"]).strip()
-
-    if result_value.lower() == "pass":
-
+    if student["Result"] == "Pass":
         st.success("🎉 PASS — ناجح")
-
-    elif result_value.lower() == "fail":
-
-        st.error("❌ FAIL — راسب")
-
     else:
-
-        st.info(f"📋 النتيجة: {result_value}")
+        st.error("❌ FAIL — راسب")
