@@ -8,6 +8,9 @@ df = pd.read_excel("Student_Results.xlsx")
 if "searched_id" not in st.session_state:
     st.session_state.searched_id = None
 
+# شعار المدرسة
+st.image("school_logo.jpg", width=150)
+
 # عنوان الموقع
 st.title("🎓 نظام الاستعلام عن نتائج الطلاب")
 
