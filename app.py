@@ -12,47 +12,98 @@ st.set_page_config(
 st.markdown("""
 <style>
 
+.block-container {
+    max-width: 650px;
+    padding-top: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* العنوان الرئيسي */
 .main-title {
     text-align: center;
-    font-size: 38px;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.4;
 }
 
+/* الوصف */
 .subtitle {
     text-align: center;
-    font-size: 18px;
-    margin-bottom: 30px;
+    font-size: 16px;
+    opacity: 0.75;
+    margin-bottom: 24px;
 }
 
+/* بطاقة الطالب */
 .student-card {
-    padding: 22px;
-    border-radius: 15px;
+    padding: 18px;
+    border-radius: 14px;
     background-color: #1f232b;
     border: 1px solid #343943;
-    margin-top: 15px;
+    margin-top: 12px;
+    margin-bottom: 18px;
 }
 
+/* عنوان بيانات الطالب */
+.student-card h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 20px;
+}
+
+/* نتيجة النجاح */
 .result-pass {
-    padding: 18px;
+    padding: 16px;
     border-radius: 12px;
     background-color: #123d2b;
     color: #5cff9d;
     text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 15px;
+    font-size: 21px;
+    font-weight: 700;
+    margin-top: 10px;
 }
 
+/* نتيجة الرسوب */
 .result-fail {
-    padding: 18px;
+    padding: 16px;
     border-radius: 12px;
     background-color: #45252b;
     color: #ff7b86;
     text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 15px;
+    font-size: 21px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+/* تحسين الهاتف */
+@media (max-width: 600px) {
+
+    .block-container {
+        padding-top: 1.2rem;
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+    }
+
+    .main-title {
+        font-size: 25px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .student-card {
+        padding: 15px;
+    }
+
+    .result-pass,
+    .result-fail {
+        font-size: 19px;
+        padding: 14px;
+    }
 }
 
 </style>
@@ -154,4 +205,4 @@ if (
         st.markdown(
             '<div class="result-fail">❌ FAIL — راسب</div>',
             unsafe_allow_html=True
-        )
+)
