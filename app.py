@@ -1,20 +1,15 @@
-
 import streamlit as st
 import pandas as pd
 
-# قراءة ملف النتائج
-file_path = "Student_Results.xlsx"
-df = pd.read_excel(file_path)
+# قراءة ملف النتائج من نفس مجلد المشروع
+df = pd.read_excel("Student_Results.xlsx")
 
-# عنوان الموقع
 st.title("🏫 نظام الاستعلام عن نتائج الطلاب")
 st.write("أدخل اسم الطالب ورقمه الجامعي للاستعلام عن النتيجة.")
 
-# خانات الإدخال
 student_name = st.text_input("اسم الطالب")
 student_id = st.text_input("الرقم الجامعي")
 
-# زر الاستعلام
 if st.button("🔍 استعلام عن النتيجة"):
 
     result = df[
@@ -23,11 +18,12 @@ if st.button("🔍 استعلام عن النتيجة"):
     ]
 
     if not result.empty:
-        student_result = result.iloc[0]["Result"]
+
+        student_result = str(result.iloc[0]["Result"]).strip()
 
         st.success(f"الطالب: {student_name}")
 
-        if student_result == "Pass":
+        if student_result.lower() == "pass":
             st.success("✅ النتيجة: ناجح")
         else:
             st.error("❌ النتيجة: راسب")
