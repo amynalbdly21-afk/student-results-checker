@@ -1,4 +1,5 @@
-import streamlit as st
+
+            import streamlit as st
 import pandas as pd
 
 # إعداد الصفحة
@@ -12,56 +13,43 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* خلفية الصفحة */
-.stApp {
-    background-color: white;
-    color: #222222;
-}
-
-/* العنوان */
 .main-title {
     text-align: center;
     font-size: 38px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #222222;
 }
 
-/* الوصف */
 .subtitle {
     text-align: center;
     font-size: 18px;
     margin-bottom: 30px;
-    color: #555555;
 }
 
-/* بطاقة الطالب */
 .student-card {
     padding: 22px;
     border-radius: 15px;
-    background-color: #f8f9fa;
-    border: 1px solid #dddddd;
+    background-color: #1f232b;
+    border: 1px solid #343943;
     margin-top: 15px;
 }
 
-/* نتيجة النجاح */
 .result-pass {
     padding: 18px;
     border-radius: 12px;
-    background-color: #e8f8ef;
-    color: #16834b;
+    background-color: #123d2b;
+    color: #5cff9d;
     text-align: center;
     font-size: 24px;
     font-weight: bold;
     margin-top: 15px;
 }
 
-/* نتيجة الرسوب */
 .result-fail {
     padding: 18px;
     border-radius: 12px;
-    background-color: #fdebed;
-    color: #d33b4b;
+    background-color: #45252b;
+    color: #ff7b86;
     text-align: center;
     font-size: 24px;
     font-weight: bold;
@@ -157,7 +145,7 @@ if (
 
     if str(student["Result"]).strip().lower() == "pass":
 
-        # 🎈 احتفال بالنجاح
+        # 🎈 احتفال عند النجاح
         st.balloons()
 
         st.markdown(
@@ -170,4 +158,4 @@ if (
         st.markdown(
             '<div class="result-fail">❌ FAIL — راسب</div>',
             unsafe_allow_html=True
-            )
+        )
