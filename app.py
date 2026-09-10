@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 
 # قراءة ملف النتائج
-file_path = "/content/drive/MyDrive/Student_Results.xlsx"
+file_path = "Student_Results.xlsx"
 df = pd.read_excel(file_path)
 
 # عنوان الموقع
