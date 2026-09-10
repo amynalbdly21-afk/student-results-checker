@@ -25,6 +25,14 @@ st.markdown("""
     margin-bottom: 30px;
 }
 
+.student-card {
+    padding: 22px;
+    border-radius: 15px;
+    background-color: #1f232b;
+    border: 1px solid #343943;
+    margin-top: 15px;
+}
+
 .result-pass {
     padding: 18px;
     border-radius: 12px;
@@ -59,8 +67,12 @@ df = pd.read_excel("Student_Results.xlsx")
 if "searched_id" not in st.session_state:
     st.session_state.searched_id = None
 
+# حفظ حالة دخول الإدارة
+if "admin_logged_in" not in st.session_state:
+    st.session_state.admin_logged_in = False
 
-# العنوان
+
+# العنوان الرئيسي
 st.markdown(
     '<div class="main-title">🎓 نظام الاستعلام عن نتائج الطلاب</div>',
     unsafe_allow_html=True
@@ -72,16 +84,17 @@ st.markdown(
 )
 
 
-# إنشاء تبويبات
+# إنشاء التبويبات
 tab1, tab2 = st.tabs([
     "🔎 استعلام النتائج",
     "🔐 لوحة الإدارة"
 ])
 
 
-# =========================
-# استعلام الطلاب
-# =========================
+# ==================================================
+# استعلام النتائج
+# ==================================================
+
 with tab1:
 
     # إدخال الرقم الجامعي
@@ -116,7 +129,7 @@ with tab1:
                 st.session_state.searched_id = None
 
 
-    # عرض النتيجة
+    # عرض بيانات الطالب
     if (
         st.session_state.searched_id is not None
         and student_id.strip().isdigit()
@@ -129,6 +142,7 @@ with tab1:
         # رسالة النجاح
         st.success("✅ تم العثور على الطالب بنجاح!")
 
+        # عنوان البيانات
         st.markdown("### 👨‍🎓 بيانات الطالب")
 
         # جدول بيانات الطالب
@@ -165,21 +179,29 @@ with tab1:
             )
 
 
-# =========================
+# ==================================================
 # لوحة الإدارة
-# =========================
+# ==================================================
+
 with tab2:
 
-    st.markdown("### 🔐 دخول الإدارة")
+    # عنوان صغير وأنيق
+    st.markdown(
+        '<div style="font-size:22px; font-weight:bold; margin-bottom:15px;">'
+        '🔐 دخول الإدارة'
+        '</div>',
+        unsafe_allow_html=True
+    )
 
+    # كلمة المرور
     password = st.text_input(
         "🔑 كلمة مرور الإدارة",
         type="password"
     )
 
+    # زر الدخول
     if st.button("🔓 دخول", use_container_width=True):
 
-        # كلمة المرور محفوظة في Streamlit Secrets
         if password == st.secrets["ADMIN_PASSWORD"]:
             st.session_state.admin_logged_in = True
         else:
@@ -187,12 +209,19 @@ with tab2:
             st.error("❌ كلمة المرور غير صحيحة.")
 
 
-    # إذا تم تسجيل دخول الإدارة
+    # إذا تم تسجيل الدخول
     if st.session_state.get("admin_logged_in", False):
 
         st.success("✅ تم تسجيل الدخول بنجاح")
 
-        st.markdown("## 📊 إحصائيات الطلاب")
+        # عنوان الإحصائيات بحجم أصغر
+        st.markdown(
+            '<div style="font-size:24px; font-weight:bold; '
+            'margin-top:15px; margin-bottom:20px;">'
+            '📊 إحصائيات الطلاب'
+            '</div>',
+            unsafe_allow_html=True
+        )
 
         # حساب الإحصائيات
         total_students = len(df)
@@ -218,7 +247,8 @@ with tab2:
             if total_students > 0 else 0
         )
 
-        # عرض الأرقام
+
+        # عرض الإحصائيات
         col1, col2 = st.columns(2)
 
         with col1:
@@ -232,6 +262,7 @@ with tab2:
                 "✅ الناجحون",
                 passed
             )
+
 
         col3, col4 = st.columns(2)
 
@@ -247,7 +278,9 @@ with tab2:
                 f"{pass_rate:.1f}%"
             )
 
+
         st.markdown("---")
+
 
         # نسبة الرسوب
         st.metric(
@@ -255,9 +288,16 @@ with tab2:
             f"{fail_rate:.1f}%"
         )
 
-        st.markdown("### 📊 توزيع النتائج")
 
-        # بيانات الرسم البياني
+        # الرسم البياني
+        st.markdown(
+            '<div style="font-size:20px; font-weight:bold; '
+            'margin-top:20px; margin-bottom:10px;">'
+            '📊 توزيع النتائج'
+            '</div>',
+            unsafe_allow_html=True
+        )
+
         chart_data = pd.DataFrame({
             "النتيجة": ["ناجح", "راسب"],
             "العدد": [passed, failed]
@@ -267,7 +307,8 @@ with tab2:
             chart_data.set_index("النتيجة")
         )
 
-        # زر تسجيل الخروج
+
+        # تسجيل الخروج
         if st.button("🚪 تسجيل الخروج"):
             st.session_state.admin_logged_in = False
             st.rerun()
