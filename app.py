@@ -1,6 +1,13 @@
 import streamlit as st
 import pandas as pd
 
+# إعداد الصفحة
+st.set_page_config(
+    page_title="Student Results Checker",
+    page_icon="🎓",
+    layout="centered"
+)
+
 # قراءة ملف النتائج
 df = pd.read_excel("Student_Results.xlsx")
 
@@ -8,20 +15,23 @@ df = pd.read_excel("Student_Results.xlsx")
 if "searched_id" not in st.session_state:
     st.session_state.searched_id = None
 
-# عنوان الموقع
+# العنوان
 st.title("🎓 نظام الاستعلام عن نتائج الطلاب")
 
 st.write("أدخل الرقم الجامعي ثم اضغط على زر الاستعلام.")
 
 # خانة الرقم الجامعي
-student_id = st.text_input("الرقم الجامعي")
+student_id = st.text_input(
+    "🆔 الرقم الجامعي",
+    placeholder="مثال: 1003"
+)
 
-# إذا تم مسح الرقم، يتم حذف نتيجة البحث
+# إذا تم مسح الرقم
 if student_id.strip() == "":
     st.session_state.searched_id = None
 
 # زر الاستعلام
-if st.button("🔍 استعلام"):
+if st.button("🔍 استعلام", use_container_width=True):
 
     if student_id.strip() == "":
         st.warning("⚠️ يرجى إدخال الرقم الجامعي.")
@@ -36,9 +46,7 @@ if st.button("🔍 استعلام"):
             result = df[df["Student_ID"] == student_id_value]
 
             if not result.empty:
-                # حفظ الرقم الذي تم الاستعلام عنه
                 st.session_state.searched_id = student_id_value
-
             else:
                 st.error("❌ الرقم الجامعي غير موجود.")
                 st.session_state.searched_id = None
@@ -48,8 +56,7 @@ if st.button("🔍 استعلام"):
             st.session_state.searched_id = None
 
 
-# عرض النتيجة فقط إذا كان الرقم موجودًا
-# وهو نفس الرقم الذي تم الاستعلام عنه
+# عرض النتيجة
 if (
     student_id.strip() != ""
     and st.session_state.searched_id is not None
@@ -62,11 +69,25 @@ if (
 
     st.success("✅ تم العثور على الطالب بنجاح!")
 
+    # بيانات الطالب
     st.subheader("👨‍🎓 بيانات الطالب")
 
-    st.write(f"**الرقم الجامعي:** {student['Student_ID']}")
     st.write(f"**اسم الطالب:** {student['Student_Name']}")
+    st.write(f"**الرقم الجامعي:** {student['Student_ID']}")
 
-    st.subheader("📊 نتيجة الطالب")
+    # النتيجة
+    st.subheader("📊 النتيجة")
 
-    st.dataframe(result, use_container_width=True)
+    result_value = str(student["Result"]).strip()
+
+    if result_value.lower() == "pass":
+
+        st.success("🎉 PASS — ناجح")
+
+    elif result_value.lower() == "fail":
+
+        st.error("❌ FAIL — راسب")
+
+    else:
+
+        st.info(f"📋 النتيجة: {result_value}")
