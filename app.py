@@ -1,11 +1,5 @@
 import streamlit as st
 import pandas as pd
-from io import BytesIO
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.enums import TA_CENTER
 
 # إعداد الصفحة
 st.set_page_config(
@@ -69,66 +63,6 @@ st.markdown("""
 df = pd.read_excel("Student_Results.xlsx")
 
 
-# إنشاء ملف PDF
-def create_pdf(student):
-
-    buffer = BytesIO()
-
-    document = SimpleDocTemplate(
-        buffer,
-        pagesize=A4,
-        rightMargin=50,
-        leftMargin=50,
-        topMargin=50,
-        bottomMargin=50
-    )
-
-    styles = getSampleStyleSheet()
-
-    title_style = styles["Title"]
-    title_style.alignment = TA_CENTER
-
-    elements = []
-
-    elements.append(
-        Paragraph("Student Result", title_style)
-    )
-
-    data = [
-        ["Information", "Value"],
-        ["Student Name", str(student["Student_Name"])],
-        ["Student ID", str(student["Student_ID"])],
-        ["Result", str(student["Result"]).upper()]
-    ]
-
-    table = Table(
-        data,
-        colWidths=[180, 250]
-    )
-
-    table.setStyle(
-        TableStyle([
-            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1f232b")),
-            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-            ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
-            ("FONTSIZE", (0, 0), (-1, -1), 12),
-            ("GRID", (0, 0), (-1, -1), 1, colors.grey),
-            ("BACKGROUND", (0, 1), (-1, -1), colors.whitesmoke),
-            ("TOPPADDING", (0, 0), (-1, -1), 12),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
-        ])
-    )
-
-    elements.append(table)
-
-    document.build(elements)
-
-    buffer.seek(0)
-
-    return buffer
-
-
 # حفظ آخر رقم تم الاستعلام عنه
 if "searched_id" not in st.session_state:
     st.session_state.searched_id = None
@@ -189,13 +123,14 @@ if (
     result = df[df["Student_ID"] == st.session_state.searched_id]
     student = result.iloc[0]
 
-    # رسالة العثور على الطالب
+    # رسالة النجاح
     st.success("✅ تم العثور على الطالب بنجاح!")
 
-    # بيانات الطالب
+    # عنوان البيانات
     st.markdown("### 👨‍🎓 بيانات الطالب")
 
-    student_data = {
+    # جدول بيانات الطالب
+    student_data = pd.DataFrame({
         "البيان": [
             "اسم الطالب",
             "الرقم الجامعي",
@@ -206,13 +141,13 @@ if (
             str(student["Student_ID"]),
             str(student["Result"]).upper()
         ]
-    }
+    })
 
-    result_table = pd.DataFrame(student_data)
+    st.table(student_data)
 
-    st.table(result_table)
+    # عرض النتيجة النهائية
+    st.markdown("### 📊 النتيجة")
 
-    # النتيجة النهائية
     if str(student["Result"]).strip().lower() == "pass":
 
         st.markdown(
@@ -226,15 +161,3 @@ if (
             '<div class="result-fail">❌ FAIL — راسب</div>',
             unsafe_allow_html=True
         )
-
-    # إنشاء PDF
-    pdf_file = create_pdf(student)
-
-    # زر تحميل PDF
-    st.download_button(
-        label="📄 تحميل النتيجة PDF",
-        data=pdf_file,
-        file_name=f"Student_Result_{student['Student_ID']}.pdf",
-        mime="application/pdf",
-        use_container_width=True
-    )
